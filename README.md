@@ -50,4 +50,4 @@ This isn't as efficient as it should be, however the plugin will always save the
 
 ## Contributing
 
-I'm really happy to consider any contributions to this plugin. Before you make any changes, please read the contribution guide.
+I'm really happy to consider any contributions to this plugin. Before you make any changes, please read the [contribution guide](https://github.com/robb0wen/eleventy-plugin-local-images/blob/master/CONTRIBUTING.md).
