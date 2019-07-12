@@ -1,10 +1,30 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const { JSDOM } = require('jsdom');
-const download = require('download');
+const fetch = require('node-fetch');
 const sh = require('shorthash');
 
-let config = { verbose: false };
+let config = { distPath: '_site', verbose: false };
+
+const downloadImage = async path => {
+  if (config.verbose) {
+    console.log('eleventy-plugin-local-images: Attempting to copy ' + path);
+  }
+
+  try {
+    const imgBuffer = await fetch(path)
+      .then(res => {
+        if (res.status == 200) {
+          return res;
+        } else {
+          throw new Error(`File "${path}" not found`);
+        }
+      }).then(res => res.buffer());
+    return imgBuffer
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const processImage = async img => {
   let { distPath, assetPath } = config;
@@ -12,9 +32,8 @@ const processImage = async img => {
   const external = /https?:\/\/((?:[\w\d-]+\.)+[\w\d]{2,})/i;
   const imgPath = img.getAttribute('src');
 
-  try {
-    if (external.test(imgPath)) {
-
+  if (external.test(imgPath)) {
+    try {
       // get the filname from the path
       const pathComponents = imgPath.split('/');
       const filename = pathComponents[pathComponents.length - 1];
@@ -25,36 +44,25 @@ const processImage = async img => {
 
       // create the file path from config
       const outputFilePath = path.join(distPath,assetPath,`${hash}-${filename}`);
-
       // image is external so download it.
-      const imgBuffer = await download(imgPath);
 
-      // save the file out, and log it to the console
-      fs.writeFile(
-        outputFilePath, 
-        imgBuffer, 
-        (err) => {
-          if (err) { throw err; }
-          if (config.verbose) {
-            console.log(`eleventy-plugin-local-images: Saved ${filename} to ${outputFilePath}`);
-          }
+      let imgBuffer = await downloadImage(imgPath);
+      if (imgBuffer) {
+        // save the file out, and log it to the console
+        await fs.outputFile(outputFilePath, imgBuffer);
+        if (config.verbose) {
+          console.log(`eleventy-plugin-local-images: Saving ${filename} to ${outputFilePath}`);
         }
-      );
 
-      // Update the image with the new file path
-      img.setAttribute('src', path.join(assetPath, `${hash}-${filename}`));  
-    }
-
-    return img;
-
-  } catch (err) {
-    // log the error but carry on. If a filepath gets missed, it isn't the end of the world.
-    if (err.url) {
-      console.log(`eleventy-plugin-local-images: Couldn\'t reach image ${err.url}`);
-    } else {
-      console.log(err);
+        // Update the image with the new file path
+        img.setAttribute('src', path.join(assetPath, `${hash}-${filename}`));  
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
+
+  return img;
 };
 
 const grabRemoteImages = async (rawContent, outputPath) => {

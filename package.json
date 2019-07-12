@@ -27,8 +27,9 @@
   },
   "homepage": "https://github.com/robb0wen/eleventy-plugin-local-images#readme",
   "dependencies": {
-    "download": "^7.1.0",
+    "fs-extra": "^8.1.0",
     "jsdom": "^15.1.1",
+    "node-fetch": "^2.6.0",
     "shorthash": "0.0.2"
   }
 }

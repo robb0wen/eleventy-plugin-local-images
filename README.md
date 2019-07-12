@@ -25,7 +25,7 @@ __Step 2:__ Configure and add the plugin:
 ```js
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPlugin(localImages, {
-    distPath: 'dist',
+    distPath: '_site',
     assetPath: '/assets/img',
     selector: 'img',
     verbose: false
@@ -37,7 +37,7 @@ module.exports = function(eleventyConfig) {
 
 | Key | Type | Description |
 |--|--|--|
-| `distPath` | String | The output folder for your eleventy site, e.g. `'dist'`<br>__Required__ |
+| `distPath` | String | The output folder for your eleventy site, e.g. `'_site'`<br>__Required__ |
 | `assetPath` | String | The root-relative folder where your image assets are stored, e.g. `'/assets/img'`<br>__Required__ |
 | `selector` | String | The css selector for the images you wish to replace. This defaults to all images `'img'`, but could be used to fence certain images only, e.g. `'.post-content img'`<br>Default: `'img'` |
 | `verbose` | Boolean | Toggles console logging when images are saved locally<br>Default: `false` |
