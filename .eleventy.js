@@ -4,7 +4,7 @@ const { JSDOM } = require('jsdom');
 const fetch = require('node-fetch');
 const sh = require('shorthash');
 
-let config = { distPath: '_site', verbose: false };
+let config = { distPath: '_site', verbose: false, attribute: 'src' };
 
 const downloadImage = async path => {
   if (config.verbose) {
@@ -27,7 +27,7 @@ const downloadImage = async path => {
 }
 
 const processImage = async img => {
-  let { distPath, assetPath, attribute = 'src' } = config;
+  let { distPath, assetPath, attribute } = config;
 
   const external = /https?:\/\/((?:[\w\d-]+\.)+[\w\d]{2,})/i;
   const imgPath = img.getAttribute(attribute);
