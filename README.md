@@ -40,6 +40,7 @@ module.exports = function(eleventyConfig) {
 | `distPath` | String | The output folder for your eleventy site, e.g. `'_site'`<br>__Required__ |
 | `assetPath` | String | The root-relative folder where your image assets are stored, e.g. `'/assets/img'`<br>__Required__ |
 | `selector` | String | The css selector for the images you wish to replace. This defaults to all images `'img'`, but could be used to fence certain images only, e.g. `'.post-content img'`<br>Default: `'img'` |
+| `attribute` | String | The attribute containing the image path. This defaults to `'src'`, but could be used to match other attributes, e.g. `'srcset'` if targeting a `<picture><source>`, or `'data-src'` if using a lazy-loading plugin<br>Default: `'src'` |
 | `verbose` | Boolean | Toggles console logging when images are saved locally<br>Default: `false` |
 
 ## Known issues
