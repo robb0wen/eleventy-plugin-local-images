@@ -3,6 +3,7 @@ const path = require('path');
 const { JSDOM } = require('jsdom');
 const fetch = require('node-fetch');
 const sh = require('shorthash');
+const fileType = require('file-type');
 
 let config = { distPath: '_site', verbose: false, attribute: 'src' };
 
@@ -26,6 +27,18 @@ const downloadImage = async path => {
   }
 }
 
+const getFileType = (filename, buffer) => {
+  // infer the file ext from the buffer
+  const type = fileType(buffer);
+
+  if (type.ext) {
+    // return the filename with extension
+    return `${filename}.${type.ext}`;
+  } else {
+    throw new Error(`Couldn't infer file extension for "${path}"`);
+  }
+};
+
 const processImage = async img => {
   let { distPath, assetPath, attribute } = config;
 
@@ -36,18 +49,23 @@ const processImage = async img => {
     try {
       // get the filname from the path
       const pathComponents = imgPath.split('/');
-      const filename = pathComponents[pathComponents.length - 1];
+      let filename = pathComponents[pathComponents.length - 1];
       
       // generate a unique short hash based on the original file path
       // this will prevent filename clashes
       const hash = sh.unique(imgPath);
 
-      // create the file path from config
-      const outputFilePath = path.join(distPath,assetPath,`${hash}-${filename}`);
       // image is external so download it.
 
       let imgBuffer = await downloadImage(imgPath);
       if (imgBuffer) {
+        
+        // check if the remote image has a file extension and then hash the filename
+        const hashedFilename = !path.extname(filename) ? `${hash}-${getFileType(filename, imgBuffer)}` : `${hash}-${filename}`;
+
+        // create the file path from config
+        let outputFilePath = path.join(distPath,assetPath, hashedFilename);
+
         // save the file out, and log it to the console
         await fs.outputFile(outputFilePath, imgBuffer);
         if (config.verbose) {
@@ -55,7 +73,7 @@ const processImage = async img => {
         }
 
         // Update the image with the new file path
-        img.setAttribute(attribute, path.join(assetPath, `${hash}-${filename}`));  
+        img.setAttribute(attribute, path.join(assetPath, hashedFilename));  
       }
     } catch (error) {
       console.log(error);
