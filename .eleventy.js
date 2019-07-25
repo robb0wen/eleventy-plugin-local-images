@@ -27,10 +27,10 @@ const downloadImage = async path => {
 }
 
 const processImage = async img => {
-  let { distPath, assetPath } = config;
+  let { distPath, assetPath, attribute = 'src' } = config;
 
   const external = /https?:\/\/((?:[\w\d-]+\.)+[\w\d]{2,})/i;
-  const imgPath = img.getAttribute('src');
+  const imgPath = img.getAttribute(attribute);
 
   if (external.test(imgPath)) {
     try {
@@ -55,7 +55,7 @@ const processImage = async img => {
         }
 
         // Update the image with the new file path
-        img.setAttribute('src', path.join(assetPath, `${hash}-${filename}`));  
+        img.setAttribute(attribute, path.join(assetPath, `${hash}-${filename}`));  
       }
     } catch (error) {
       console.log(error);
