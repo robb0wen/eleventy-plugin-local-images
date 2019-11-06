@@ -39,6 +39,8 @@ const getFileType = (filename, buffer) => {
   }
 };
 
+const urlJoin = (a, b) => `${a.replace(/\/$/, '')}/${b.replace(/^\//, '')}`;
+
 const processImage = async img => {
   let { distPath, assetPath, attribute } = config;
 
@@ -73,7 +75,7 @@ const processImage = async img => {
         }
 
         // Update the image with the new file path
-        img.setAttribute(attribute, path.join(assetPath, hashedFilename));  
+        img.setAttribute(attribute, urlJoin(assetPath, hashedFilename));
       }
     } catch (error) {
       console.log(error);
