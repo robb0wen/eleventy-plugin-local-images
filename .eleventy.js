@@ -41,11 +41,22 @@ const getFileType = (filename, buffer) => {
 
 const processImage = async img => {
   let { distPath, assetPath, attribute } = config;
+  let filetypes;
+  if (Array.isArray(config.fileTypes)) {
+    fileTypes = config.fileTypes
+  } else {
+    fileTypes = ["svg", "bmp", "tiff", "tif", "webp", "gif", "png", "jpg", "jpeg"]
+  }
 
   const external = /https?:\/\/((?:[\w\d-]+\.)+[\w\d]{2,})/i;
   const imgPath = img.getAttribute(attribute);
 
-  if (external.test(imgPath)) {
+  let isAnImage = fileTypes.some(ext => {
+    if (typeof ext !== "string" && ext.length > 0) { return false }
+    return imgPath.endsWith(`.${ext}`);
+  });
+
+  if (isAnImage && external.test(imgPath)) {
     try {
       // get the filname from the path
       const pathComponents = imgPath.split('/');
@@ -73,7 +84,11 @@ const processImage = async img => {
         }
 
         // Update the image with the new file path
-        img.setAttribute(attribute, path.join(assetPath, hashedFilename));  
+        let newPath = path.join(assetPath, hashedFilename);
+        if (typeof config.siteUrl === "string") {
+          newPath = config.siteUrl + newPath 
+        }
+        img.setAttribute(attribute, newPath);
       }
     } catch (error) {
       console.log(error);
