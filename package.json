@@ -4,7 +4,7 @@
   "description": "a plugin to grab remote images and serve them locally",
   "main": ".eleventy.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "prettier -c .eleventy.js"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,16 @@
     "jsdom": "^15.1.1",
     "node-fetch": "^2.6.0",
     "shorthash": "0.0.2"
+  },
+  "devDependencies": {
+    "glob": "^7.1.6",
+    "husky": "^4.0.10",
+    "prettier": "1.19.1",
+    "pretty-quick": "^2.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
