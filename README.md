@@ -30,6 +30,15 @@ module.exports = function(eleventyConfig) {
     selector: 'img',
     verbose: false
   });
+
+  // To also update meta tags, e.g. twitter:image
+  eleventyConfig.addPlugin(localImages, {
+    distPath: '_site',
+    assetPath: '/assets/img',
+    selector: 'meta',
+    attribute: 'content',
+    verbose: false
+  });
 };
 ```
 
@@ -41,6 +50,8 @@ module.exports = function(eleventyConfig) {
 | `assetPath` | String | The root-relative folder where your image assets are stored, e.g. `'/assets/img'`<br>__Required__ |
 | `selector` | String | The css selector for the images you wish to replace. This defaults to all images `'img'`, but could be used to fence certain images only, e.g. `'.post-content img'`<br>Default: `'img'` |
 | `attribute` | String | The attribute containing the image path. This defaults to `'src'`, but could be used to match other attributes, e.g. `'srcset'` if targeting a `<picture><source>`, or `'data-src'` if using a lazy-loading plugin<br>Default: `'src'` |
+| `fileTypes` | Array of Strings | Filetypes to download (will ignore others). Defaults to `["svg", "bmp", "tiff", "tif", "webp", "gif", "png", "jpg", "jpeg"]` |
+| `siteUrl` | String | For prepending to the local file path (e.g. in the case of meta tags that require absolute URLs) |
 | `verbose` | Boolean | Toggles console logging when images are saved locally<br>Default: `false` |
 
 ## Known issues
