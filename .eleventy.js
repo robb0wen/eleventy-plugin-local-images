@@ -107,7 +107,6 @@ const processImageSrcset = async img => {
       newSrcset.push(`${assetPath}/${hashedFilename} ${url[1]}`)
     }
   }
-  console.log(newSrcset);
   img.setAttribute(srcsetDef, newSrcset.join(", "));
 }
 
