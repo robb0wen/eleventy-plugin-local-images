@@ -39,6 +39,8 @@ const getFileType = (filename, buffer) => {
   }
 };
 
+const urlJoin = (a, b) => `${a.replace(/\/$/, '')}/${b.replace(/^\//, '')}`;
+
 const processImage = async img => {
   let { distPath, assetPath, attribute } = config;
   let filetypes;
@@ -60,7 +62,10 @@ const processImage = async img => {
     try {
       // get the filname from the path
       const pathComponents = imgPath.split('/');
-      let filename = pathComponents[pathComponents.length - 1];
+      
+      // break off cache busting string if there is one
+      let filename = pathComponents[pathComponents.length - 1].split("?");
+      filename = filename[0];
       
       // generate a unique short hash based on the original file path
       // this will prevent filename clashes
@@ -84,7 +89,7 @@ const processImage = async img => {
         }
 
         // Update the image with the new file path
-        let newPath = path.join(assetPath, hashedFilename);
+        let newPath = urlJoin(assetPath, hashedFilename);
         if (typeof config.siteUrl === "string") {
           newPath = config.siteUrl + newPath 
         }

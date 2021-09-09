@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build": "eleventy"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^0.12.1",
+    "eleventy-plugin-local-images": "^0.4.1"
+  }
+}
