@@ -2,6 +2,8 @@
 title: Hello world
 ---
 
+<meta property="og:image" content="https://placekitten.com/400/400">
+
 ![This is an image](https://placekitten.com/400/500)
 
 <img src="https://placekitten.com/800/500" alt="Also an image">
