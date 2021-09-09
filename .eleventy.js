@@ -45,17 +45,18 @@ const processImage = async img => {
   let { distPath, assetPath, attribute } = config;
 
   const external = /https?:\/\/((?:[\w\d-]+\.)+[\w\d]{2,})/i;
-  const imgPath = img.getAttribute(attribute);
+  const attr = attribute.split(",").map(attr => attr.trim()).find(attr => img.getAttribute(attr));
+  const imgPath = img.getAttribute(attr);
 
   if (external.test(imgPath)) {
     try {
       // get the filname from the path
       const pathComponents = imgPath.split('/');
-      
+
       // break off cache busting string if there is one
       let filename = pathComponents[pathComponents.length - 1].split("?");
       filename = filename[0];
-      
+
       // generate a unique short hash based on the original file path
       // this will prevent filename clashes
       const hash = sh.unique(imgPath);
@@ -64,7 +65,7 @@ const processImage = async img => {
 
       let imgBuffer = await downloadImage(imgPath);
       if (imgBuffer) {
-        
+
         // check if the remote image has a file extension and then hash the filename
         const hashedFilename = !path.extname(filename) ? `${hash}-${getFileType(filename, imgBuffer)}` : `${hash}-${filename}`;
 
@@ -78,7 +79,7 @@ const processImage = async img => {
         }
 
         // Update the image with the new file path
-        img.setAttribute(attribute, urlJoin(assetPath, hashedFilename));
+        img.setAttribute(attr, urlJoin(assetPath, hashedFilename));
       }
     } catch (error) {
       console.log(error);
