@@ -118,7 +118,8 @@ const processImage = async img => {
   } = config;
 
   const external = /https?:\/\/((?:[\w\d-]+\.)+[\w\d]{2,})/i;
-  const imgPath = img.getAttribute(attribute);
+  const attr = attribute.split(",").map(attr => attr.trim()).find(attr => img.getAttribute(attr));
+  const imgPath = img.getAttribute(attr);
 
   if (external.test(imgPath)) {
     try {
@@ -151,7 +152,7 @@ const processImage = async img => {
         }
 
         // Update the image with the new file path
-        img.setAttribute(attribute, urlJoin(assetPath, hashedFilename));
+        img.setAttribute(attr, urlJoin(assetPath, hashedFilename));
 
         await processImageSrcset(img);
       }
@@ -169,7 +170,7 @@ const grabRemoteImages = async (rawContent, outputPath) => {
   } = config;
   let content = rawContent;
 
-  if (outputPath.endsWith('.html')) {
+  if (outputPath && outputPath.endsWith('.html')) {
     const dom = new JSDOM(content);
     const images = [...dom.window.document.querySelectorAll(selector)];
 
