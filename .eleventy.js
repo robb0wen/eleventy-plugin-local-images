@@ -72,11 +72,11 @@ const processImageSrcset = async img => {
 
   let parts = srcset.split(",");
 
-  for (let i = 0; i < parts.length; i++) {
-    let url = parts[i].trim().split(" ");
+  parts.forEach(async (part) => {
+    let url = part.trim().split(" ");
     let imgPath = url[0];
 
-    // get the filname from the path
+    // get the filename from the path
     const pathComponents = imgPath.split('/');
 
     // break off cache busting string if there is one
@@ -106,7 +106,7 @@ const processImageSrcset = async img => {
 
       newSrcset.push(`${assetPath}/${hashedFilename} ${url[1]}`)
     }
-  }
+  });
   img.setAttribute(srcsetDef, newSrcset.join(", "));
 }
 
@@ -123,7 +123,7 @@ const processImage = async img => {
 
   if (external.test(imgPath)) {
     try {
-      // get the filname from the path
+      // get the filename from the path
       const pathComponents = imgPath.split('/');
 
       // break off cache busting string if there is one
